@@ -10,7 +10,7 @@ const {
   updatePassword,
   getUserById,
   getUserByEmail,
-  deleteUserById,
+  deleteUser,
 } = require("../controllers/UserController");
 
 router.post("/login", loginUser);
@@ -21,6 +21,6 @@ router.post("/updateUser", updateUser);
 router.post("/changePassword", updatePassword);
 router.get("/getUserById", getUserById);
 router.get("/getUserByEmail", getUserByEmail);
-router.delete("/deleteUserById", deleteUserById);
+router.delete("/deleteUser/:id", deleteUser);
 
 module.exports = router;

@@ -3,6 +3,7 @@ import { Dispatch } from "redux";
 import { toast } from "react-toastify";
 import {
   changePassword,
+  deleteUser,
   getAllUsers,
   login,
   register,
@@ -15,6 +16,7 @@ import {
 } from "../../../services/api-user-service";
 import jwtDecode from "jwt-decode";
 import { removeSelectedCategory } from "../../../services/api-category-service";
+import { removeSelectedPost } from "../../../services/post-api-service";
 
 export const LoginUser = (user: any) => {
   return async (dispatch: Dispatch<UserActions>) => {
@@ -23,11 +25,15 @@ export const LoginUser = (user: any) => {
       const data = await login(user);
       if (!data.IsSuccess) {
         dispatch({
-          type: UserActionTypes.FINISH_REQUEST,
+          type: UserActionTypes.LOGIN_USER_ERROR,
           payload: data.Message,
         });
         toast.error(data.Message);
       } else {
+        dispatch({
+          type: UserActionTypes.LOGIN_USER_SUCCESS,
+          payload: data.Message,
+        });
         const { Token, Message } = data;
         setAccessToken(Token);
         AuthUser(Token, Message, dispatch);
@@ -114,6 +120,10 @@ export const UpdateUser = (user: any) => {
         });
         toast.error(data.Message);
       } else {
+        dispatch({
+          type: UserActionTypes.USER_UPDATED,
+          payload: data.Message,
+        });
         toast.success(data.Message);
       }
     } catch (e) {
@@ -124,7 +134,32 @@ export const UpdateUser = (user: any) => {
     }
   };
 };
-
+export const DeleteUser = (user: any) => {
+  return async (dispatch: Dispatch<UserActions>) => {
+    try {
+      dispatch({ type: UserActionTypes.START_REQUEST });
+      const data = await deleteUser(user);
+      if (!data.IsSuccess) {
+        dispatch({
+          type: UserActionTypes.FINISH_REQUEST,
+          payload: data.Message,
+        });
+        toast.error(data.Message);
+      } else {
+        dispatch({
+          type: UserActionTypes.USER_DELETED,
+          payload: data.Message,
+        });
+        toast.success(data.Message);
+      }
+    } catch (e) {
+      dispatch({
+        type: UserActionTypes.SERVER_USER_ERROR,
+        payload: "Unknown error",
+      });
+    }
+  };
+};
 export const RegisterUser = (user: any) => {
   return async (dispatch: Dispatch<UserActions>) => {
     try {
@@ -157,6 +192,7 @@ export const LogoutUser = () => {
     removeAccessToken();
     removeSelectedUser();
     removeSelectedCategory();
+    removeSelectedPost()
     dispatch({ type: UserActionTypes.LOGOUT_USER });
   };
 };

@@ -6,3 +6,11 @@ export const lengthString = (str: string) => {
     }
     return str;
 }
+export const cutString = (str: string) => {
+    if (str.length > 65) {
+        let arr = str.split('');
+        arr.splice(65, (arr.length - 65), '...');
+        str = arr.join('');
+    }
+    return str;
+}

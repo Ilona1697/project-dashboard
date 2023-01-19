@@ -62,6 +62,7 @@ const articles = [
     ShortDescription: "Game",
     Description: "Game Volleyball",
     CategoryId: 1,
+    UserId: 1,
   },
   {
     Title: "Rest for you",
@@ -71,6 +72,7 @@ const articles = [
     Description:
       "Most of the time, when we feel drained, we try to compensate by getting more sleep. And that makes sense — after all, most of us aren’t getting anywhere near the recommended seven to nine hours of sleep per night. But what do you do when you still feel exhausted even when you get more sleep?",
     CategoryId: 2,
+    UserId: 1,
   },
   {
     Title: "Work and time",
@@ -80,6 +82,7 @@ const articles = [
     Description:
       "Trim your task list. We all know how paralyzing it can be to start a big project or tackle a crazy to-do list. So don’t overwhelm yourself with a massive task list!",
     CategoryId: 3,
+    UserId: 1,
   },
 ];
 

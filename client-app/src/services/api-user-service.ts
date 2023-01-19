@@ -3,16 +3,17 @@ import axios from "axios";
 const instance = axios.create({
   baseURL: "http://localhost:5000/api/User",
   headers: {
-    "Contant-Type": "application/json",
+    "Content-Type": "application/json",
   },
 });
 
-const responceBody: any = (responce: any) => responce.data;
+const responseBody: any = (response: any) => response.data;
 
 const requests = {
-  get: (url: string) => instance.get(url).then().then(responceBody),
+  get: (url: string) => instance.get(url).then().then(responseBody),
   post: (url: string, body?: any) =>
-    instance.post(url, body).then().then(responceBody),
+    instance.post(url, body).then().then(responseBody),
+  delete: (url: string) => instance.delete(url).then().then(responseBody),
 };
 
 const User = {
@@ -23,12 +24,13 @@ const User = {
   updateUser: (user: any) => requests.post(`/updateUser`, user),
   changePassword: (passwords: any) =>
     requests.post(`/changePassword`, passwords),
+  deleteUser: (id: number) => requests.delete(`/deleteUser/${id}`),
 };
 
 export async function changePassword(passwords: any) {
   const data = await User.changePassword(passwords)
-    .then((responce: any) => {
-      const { Message, IsSuccess, IsAuth, Errors, Token } = responce;
+    .then((response: any) => {
+      const { Message, IsSuccess, IsAuth, Errors, Token } = response;
       return {
         Message,
         IsSuccess,
@@ -45,8 +47,8 @@ export async function changePassword(passwords: any) {
 
 export async function updateProfile(user: any) {
   const data = await User.updateProfile(user)
-    .then((responce: any) => {
-      const { Message, IsSuccess, IsAuth, Errors, Token } = responce;
+    .then((response: any) => {
+      const { Message, IsSuccess, IsAuth, Errors, Token } = response;
       return {
         Message,
         IsSuccess,
@@ -63,8 +65,8 @@ export async function updateProfile(user: any) {
 
 export async function updateUser(user: any) {
   const data = await User.updateUser(user)
-    .then((responce: any) => {
-      const { Message, IsSuccess, IsAuth, Errors, Token } = responce;
+    .then((response: any) => {
+      const { Message, IsSuccess, IsAuth, Errors, Token } = response;
       return {
         Message,
         IsSuccess,
@@ -78,11 +80,29 @@ export async function updateUser(user: any) {
     });
   return data;
 }
-
+export async function deleteUser(user: any) {
+  console.log(user);
+  console.log(user.id);
+  const data = await User.deleteUser(user.id)
+    .then((response: any) => {
+      const { Message, IsSuccess, IsAuth, Errors, Token } = response;
+      return {
+        Message,
+        IsSuccess,
+        IsAuth,
+        Errors,
+        Token,
+      };
+    })
+    .catch((error: any) => {
+      return error.response.data;
+    });
+  return data;
+}
 export async function getAllUsers() {
   const data = await User.getAllUsers()
-    .then((responce: any) => {
-      const { Message, IsSuccess, Payload } = responce;
+    .then((response: any) => {
+      const { Message, IsSuccess, Payload } = response;
       return {
         Message,
         IsSuccess,
@@ -97,8 +117,8 @@ export async function getAllUsers() {
 
 export async function register(user: any) {
   const data = await User.register(user)
-    .then((responce: any) => {
-      const { Message, IsSuccess, IsAuth, Errors, Token } = responce;
+    .then((response: any) => {
+      const { Message, IsSuccess, IsAuth, Errors, Token } = response;
       return {
         Message,
         IsSuccess,
@@ -115,8 +135,8 @@ export async function register(user: any) {
 
 export async function login(user: any) {
   const data = await User.login(user)
-    .then((responce: any) => {
-      const { Message, IsSuccess, IsAuth, Errors, Token } = responce;
+    .then((response: any) => {
+      const { Message, IsSuccess, IsAuth, Errors, Token } = response;
       return {
         Message,
         IsSuccess,

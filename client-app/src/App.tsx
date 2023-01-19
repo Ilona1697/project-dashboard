@@ -35,8 +35,9 @@ const App: React.FC = () => {
               <Route path="categories/:id" element={<CategoryDetails />} />
               <Route path="newCategory" element={<NewCategory />} />
               <Route path="posts" element={<GetAllPosts />} />
-              <Route path="posts/:id" element={<PostDetails />} />
+              <Route path="postDetails" element={<PostDetails />} />
               <Route path="newPost" element={<NewPost />} />
+              <Route path="*" element={<NotFound />} />
             </Route>
           )}
           {user.Role === "User" && (
@@ -47,6 +48,7 @@ const App: React.FC = () => {
               <Route path="posts" element={<GetAllPosts />} />
               <Route path="postDetails" element={<PostDetails />} />
               <Route path="newPost" element={<NewPost />} />
+              <Route path="*" element={<NotFound />} />
             </Route>
           )}
         </>

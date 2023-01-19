@@ -295,14 +295,17 @@ exports.getUserByEmail = async (req, res, next) => {
   }
 };
 
-exports.deleteUserById = async (req, res, next) => {
-  console.log("deleteCategory ", req.body);
-  const { id } = req.body;
+exports.deleteUser = async (req, res, next) => {
+  const userId = req.params.id;
+  console.log("delete controller0 ===========>", userId);
+  console.log("delete controller1 ===========>", req.params.id);
+  console.log("delete controller2 ===========>", req.params);
   try {
-    const user = await User.findOne({ where: { id: req.body.id } });
+    const user = await User.findOne({ where: { id: userId } });
+    console.log("delete controller3 ===========>", user);
     if (user) {
-      const deletedUser = await User.destroy({
-        where: { id: req.body.id },
+      await User.destroy({
+        where: { id: userId },
       });
       res
         .status(200)

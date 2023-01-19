@@ -42,7 +42,7 @@ export const CreatePost = (newPost: any) => {
       } else {
         dispatch({
           type: PostActionTypes.NEW_POST_CREATED,
-          payload: data.Message,
+          payload: data,
         });
         toast.success(data.Message);
       }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -18,8 +18,8 @@ import React from "react";
 import { useActions } from "../../../hooks/useActions";
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
 import { ChangePostSchema } from "../validation";
-import FormikControl from "./textArea";
-import { Navigate, useNavigate } from "react-router-dom";
+import FormikControl from "../../../components/ui/FileInput/TextareaControl/textArea";
+import { useNavigate } from "react-router-dom";
 import { lengthString } from "../../../helpers";
 
 const initialPostValues = {
@@ -27,7 +27,8 @@ const initialPostValues = {
   ShortDescription: "",
   Description: "",
   Image: "",
-  CategoryId: ""
+  CategoryId: "",
+  UserId: ""
 };
 
 const NewPost: React.FC = () => {
@@ -41,29 +42,23 @@ const NewPost: React.FC = () => {
   }, []);
 
   const { categories } = useTypedSelector((store) => store.CategoryReducer);
-  //   const newPost = {
-  //     Title: values.Title,
-  //     ShortDescription: values.ShortDescription,
-  //     Description: values.Description,
-  //     Image: values.Image,
-  //     CategoryId: values.CategoryId,
-  //   };
-  //   console.log(newPost);
-  //   // CreatePost(newPost);
-  // };
+  const { user } = useTypedSelector((store) => store.UserReducer);
 
   const createPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const data = new FormData(e.currentTarget);
+
+
     const newPost = {
       Title: data.get('Title'),
       ShortDescription: data.get('ShortDescription'),
       Description: data.get('Text'),
-      Image: data.get('Image'),
+      Image: data.get('Image')?.toString(),
       CategoryId: data.get('CategoryId'),
+      UserId: user.id
     };
     CreatePost(newPost);
+
     navigate(-1);
   };
 
@@ -148,6 +143,7 @@ const NewPost: React.FC = () => {
                           setFieldValue('Image', event.target.files[0])
                           setImageName(event.target.files[0].name);
                         }}
+                        accept="images/*, .png, .jpg, .jpeg"
                       />
                       <Grid item md={12} xs={12} style={{ display: 'flex', alignItems: 'center' }}>
                         <Button variant="outlined" style={{ height: '40px', minWidth: '120px' }}

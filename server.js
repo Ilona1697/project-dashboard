@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const fileUpload = require("express-fileupload");
 
 const UserRoutes = require("./routes/userRoutes");
 const CategoryRoutes = require("./routes/categoryRoutes");
@@ -15,7 +16,9 @@ const PORT = 5000;
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use(fileUpload({
+  createParentPath: true
+}));
 // Swagger
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("./swagger_output.json");

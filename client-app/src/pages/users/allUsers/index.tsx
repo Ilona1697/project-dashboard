@@ -12,13 +12,12 @@ import {
 import moment from "moment";
 import { Button, Grid } from "@mui/material";
 import { Box } from "@mui/system";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Users: React.FC = () => {
   const { GetAllUsers, SelectedUser } = useActions();
   const { loading, users } = useTypedSelector((store) => store.UserReducer);
-  const [isRedirect, setIsRedirect] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     GetAllUsers();
   }, []);
@@ -58,7 +57,7 @@ const Users: React.FC = () => {
 
           const userData = thisRow;
           SelectedUser(userData);
-          setIsRedirect(true);
+          navigate('/dashboard/userDetails')
         };
 
         return <Button onClick={onClick}>Edit</Button>;
@@ -70,9 +69,6 @@ const Users: React.FC = () => {
 
   if (loading) {
     return <Loader />;
-  }
-  if (isRedirect) {
-    return <Navigate to="/dashboard/userDetails" />;
   }
 
   return (

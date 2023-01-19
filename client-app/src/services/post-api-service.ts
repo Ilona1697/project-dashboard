@@ -66,3 +66,6 @@ export function setSelectedPost(post: any) {
   post = JSON.stringify(post);
   window.localStorage.setItem("selectedPost", post);
 }
+export function removeSelectedPost() {
+  window.localStorage.removeItem("selectedPost");
+}

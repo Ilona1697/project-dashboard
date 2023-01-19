@@ -11,12 +11,14 @@ exports.createPost = async (req, res, next) => {
         Description: req.body.Description,
         CategoryId: req.body.CategoryId,
         Image: req.body.Image,
+        UserId: req.body.UserId,
       }).save();
+
       res
         .status(200)
         .json(
           new ServiceResponse(
-            "Post successfully updated.",
+            "Post successfully created.",
             null,
             null,
             true,
@@ -25,13 +27,13 @@ exports.createPost = async (req, res, next) => {
         );
     } else {
       res
-        .status(200)
+        .status(404)
         .json(
           new ServiceResponse(
             `Post with title ${req.body.Title} exists.`,
             null,
             null,
-            true,
+            false,
             null
           )
         );
@@ -143,6 +145,7 @@ exports.updatePost = async (req, res, next) => {
       Description: req.body.Description,
       CategoryId: req.body.CategoryId,
       Image: req.body.Image,
+      UserId: req.body.UserId,
     };
     const result = await Post.update(updatedPost, {
       where: { id: req.body.id },

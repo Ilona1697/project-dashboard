@@ -18,8 +18,17 @@ export enum UserActionTypes {
   LOGOUT_USER = "LOGOUT_USER",
   ALL_USERS_LOADED = "ALL_USERS_LOADED",
   SELECT_USER = "SELECT_USER",
+  USER_UPDATED = "USER_UPDATED",
+  USER_DELETED = "USER_DELETED",
 }
-
+interface UserUpdatedActions {
+  type: UserActionTypes.USER_UPDATED;
+  payload: string;
+}
+interface UserDeletedActions {
+  type: UserActionTypes.USER_DELETED;
+  payload: string;
+}
 interface SelectUserActions {
   type: UserActionTypes.SELECT_USER;
   payload: any;
@@ -59,10 +68,12 @@ interface LoginUserSuccessAction {
 
 interface LoginUserErrorAction {
   type: UserActionTypes.LOGIN_USER_ERROR;
-  payload: any;
+  payload: string;
 }
 
 export type UserActions =
+  | UserUpdatedActions
+  | UserDeletedActions
   | SelectUserActions
   | FinishUserRequestActions
   | AllUsersLoadedActions

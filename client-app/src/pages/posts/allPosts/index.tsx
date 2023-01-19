@@ -13,6 +13,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import Loader from "../../../components/loader";
+import { cutString } from "../../../helpers";
 import { useActions } from "../../../hooks/useActions";
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
 
@@ -27,7 +28,6 @@ const GetAllPosts: React.FC = () => {
 
   const showPost = (post: any) => {
     SelectPost(post);
-    setPostId(post.id);
     setIsRedirect(true);
   }
 
@@ -35,7 +35,7 @@ const GetAllPosts: React.FC = () => {
     return <Loader />;
   }
   if (isRedirect) {
-    return <Navigate to={"/dashboard/posts/" + postId} />;
+    return <Navigate to={"/dashboard/postDetails"} />;
   }
   const rows = posts.map((post: any) => {
     return (
@@ -46,12 +46,12 @@ const GetAllPosts: React.FC = () => {
             image={post.Image}
             title={post.Title}
           />
-          <CardContent sx={{ height: 175 }}>
+          <CardContent sx={{ height: 135 }}>
             <Typography gutterBottom variant="h5" component="div">
-              {post.Title}
+              {cutString(post.Title)}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {post.ShortDescription}
+              {cutString(post.ShortDescription)}
             </Typography>
           </CardContent>
           <CardActions>

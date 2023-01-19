@@ -184,22 +184,20 @@ const DashboardLayout: React.FC = () => {
             height: "100%",
             overflow: "auto",
           }}
+          style={{ height: "100vh" }}
         >
           <Toolbar />
-          <Box sx={{ width: "100%", height: 'auto' }}>
-            <Box component="main" sx={{ width: "100%", display: "flex" }}>
-              <Box
-                sx={{
-                  px: { xs: 3, sm: 5 },
-                  py: { xs: 1, sm: 2 },
-                  width: "100%",
-                }}
-              >
-                <Outlet />
-              </Box>
+          <Box style={{ height: "calc(100vh - 64px)", display: "flex", flexDirection: "column", justifyContent: 'space-between', position: "relative" }}>
+            <Box component="main" sx={{
+              width: "100%", height: 'auto', px: { xs: 3, sm: 5 },
+              py: { xs: 1, sm: 2 }
+            }}>
+
+              <Outlet />
             </Box>
+            <Footer sx={{ p: 2 }} />
           </Box>
-          <Footer sx={{ pt: 4 }} />
+
         </Box>
       </Box>
     </ThemeProvider>

@@ -5,13 +5,13 @@ const SUPPORTED_FORMATS = ['image/jpeg', 'image/png', 'image/jpg'];
 export const ChangePostSchema = Yup.object().shape({
   Title: Yup.string()
     .required("Title is required")
-    .label("Title").max(75, 'Maximum number of characters is 75'),
+    .label("Title"),
   ShortDescription: Yup.string()
     .required("Short description is required")
-    .label("Short description").max(255, 'Maximum number of characters is 255'),
+    .label("Short description"),
   Description: Yup.string()
     .required("Description is required")
-    .label("Description").max(4000, 'Maximum number of characters is 4000'),
+    .label("Description"),
   Image: Yup.mixed()
     .nullable()
     .required("Image is required")

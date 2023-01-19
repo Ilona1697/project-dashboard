@@ -21,7 +21,6 @@ const Categories: React.FC = () => {
 
   const navigate = useNavigate();
   useEffect(() => {
-    console.log('GetAllCategories');
     GetAllCategories();
   }, []);
 
