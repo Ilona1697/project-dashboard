@@ -13,7 +13,7 @@ exports.createPost = async (req, res, next) => {
         Image: req.body.Image,
         UserId: req.body.UserId,
       }).save();
-
+      const posts = await Post.findAll();
       res
         .status(200)
         .json(
@@ -22,7 +22,7 @@ exports.createPost = async (req, res, next) => {
             null,
             null,
             true,
-            null
+            posts
           )
         );
     } else {
@@ -103,15 +103,14 @@ exports.getPostById = async (req, res, next) => {
 };
 
 exports.deletePost = async (req, res, next) => {
-  const { id } = req.body;
+  const postId = req.params.id;
   try {
-    const post = await Post.findOne({ where: { id: id } });
-    console.log("Post -> ", post);
+    const post = await Post.findOne({ where: { id: postId } });
     if (post) {
-      console.log("post ===> ", post);
       await Post.destroy({
-        where: { id: id },
+        where: { id: postId },
       });
+      const posts = await Post.findAll();
       res
         .status(200)
         .json(
@@ -120,7 +119,7 @@ exports.deletePost = async (req, res, next) => {
             null,
             null,
             true,
-            null
+            posts
           )
         );
     } else {
@@ -136,7 +135,6 @@ exports.deletePost = async (req, res, next) => {
 };
 
 exports.updatePost = async (req, res, next) => {
-  console.log(req.body);
   try {
     const updatedPost = {
       id: req.body.id,
@@ -156,6 +154,7 @@ exports.updatePost = async (req, res, next) => {
         .status(200)
         .json(new ServiceResponse("Post not updated.", null, null, true, null));
     } else {
+      const posts = await Post.findAll();
       res
         .status(200)
         .json(
@@ -164,7 +163,7 @@ exports.updatePost = async (req, res, next) => {
             null,
             null,
             true,
-            updatedPost
+            posts
           )
         );
     }

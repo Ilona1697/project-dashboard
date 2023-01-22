@@ -20,7 +20,7 @@ import Footer from "../../components/footer";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { Button, Menu, MenuItem } from "@mui/material";
 import { useActions } from "../../hooks/useActions";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
 
 const drawerWidth: number = 240;
 
@@ -79,6 +79,7 @@ const DashboardLayout: React.FC = () => {
   const [open, setOpen] = useState(true);
   const [anchorEl, setAnchorEl]: any = useState(null);
   const openProfileMenu = Boolean(anchorEl);
+  const navigate = useNavigate();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -92,6 +93,7 @@ const DashboardLayout: React.FC = () => {
   const { user } = useTypedSelector((store) => store.UserReducer);
   const Logout = () => {
     LogoutUser();
+    navigate("/");
   };
 
   return (

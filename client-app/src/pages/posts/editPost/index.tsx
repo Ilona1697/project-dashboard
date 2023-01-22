@@ -21,35 +21,52 @@ import { ChangePostSchema } from "../validation";
 import FormikControl from "../../../components/ui/FileInput/TextareaControl/textArea";
 import { useNavigate } from "react-router-dom";
 import { lengthString } from "../../../helpers";
+import Modal from "../../../components/modal";
 
 const initialPostValues = {
   Title: "",
   ShortDescription: "",
   Description: "",
   Image: "",
-  CategoryId: null,
+  CategoryId: "",
   UserId: ""
 };
 
-const NewPost: React.FC = () => {
-  const { CreatePost, GetAllCategories, GetAllPosts } = useActions();
+const EditPost: React.FC = () => {
+  const { GetAllUsers, GetAllCategories, EditPost, DeletePost } = useActions();
   const [imageName, setImageName] = useState(null);
-  const navigate = useNavigate();
-
   const fileRef = React.useRef<HTMLInputElement>(null);
+  const [isDelete, setIsDelete] = React.useState(false);
+  const navigate = useNavigate();
+  const { selectedPost } = useTypedSelector(
+    (store) => store.PostReducer
+  );
   useEffect(() => {
+    GetAllUsers();
     GetAllCategories();
+    setImageName(selectedPost.Image);
   }, []);
+
 
   const { categories } = useTypedSelector((store) => store.CategoryReducer);
   const { user } = useTypedSelector((store) => store.UserReducer);
+  initialPostValues.Title = selectedPost.Title;
+  initialPostValues.ShortDescription = selectedPost.ShortDescription;
+  initialPostValues.Description = selectedPost.Description;
+  initialPostValues.Image = selectedPost.Image;
+  initialPostValues.CategoryId = selectedPost.CategoryId;
+  initialPostValues.UserId = selectedPost.UserId;
 
-  const createPost = async (e: React.FormEvent<HTMLFormElement>) => {
+
+
+
+  const editPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
 
 
     const newPost = {
+      id: selectedPost.id,
       Title: data.get('Title'),
       ShortDescription: data.get('ShortDescription'),
       Description: data.get('Text'),
@@ -57,14 +74,26 @@ const NewPost: React.FC = () => {
       CategoryId: data.get('CategoryId') || null,
       UserId: user.id
     };
-    CreatePost(newPost);
+    EditPost(newPost);
 
     navigate(-1);
   };
-  const categoryItems = categories.map((category: any) => {
-    return <MenuItem key={category.id} value={category.id || ''}>{category.Name}</MenuItem>;
-  });
 
+  const categoryItems = categories.map((category: any) => {
+    return <MenuItem key={category.id} value={category.id}>{category.Name}</MenuItem>;
+  });
+  const handleDeletePost = () => {
+    DeletePost(selectedPost);
+    navigate(-1);
+  };
+  const modalProps = {
+    name: 'post',
+    cb: handleDeletePost,
+    setOpen: setIsDelete,
+  }
+  if (isDelete) {
+    return <Modal {...modalProps} />
+  }
   return (
     <>
       <Formik
@@ -72,7 +101,7 @@ const NewPost: React.FC = () => {
         initialValues={initialPostValues}
         onSubmit={() => { }}
       >
-        {({ errors, touched, isValid, dirty, setFieldValue, handleBlur, values, handleChange }) => {
+        {({ errors, touched, isValid, dirty, setFieldValue, handleBlur, values }) => {
           return (<>
             <Card style={{ overflow: "hidden" }} >
               <Box
@@ -81,11 +110,11 @@ const NewPost: React.FC = () => {
                 style={{ width: "100%" }}
                 sx={{ mt: 1 }}
                 onChange={e => e.preventDefault()}
-                onSubmit={createPost}
+                onSubmit={editPost}
               >
                 <CardHeader
-                  subheader={"The information for creating"}
-                  title="Create post"
+                  subheader={"The information for editing"}
+                  title="Edit post"
                 ></CardHeader>
                 <CardContent>
                   <Grid container spacing={3}>
@@ -131,7 +160,7 @@ const NewPost: React.FC = () => {
                         <div style={{ color: "red" }}>{errors.Description}</div>
                       ) : null}
                     </Grid>
-                    <Grid item md={12} xs={12}>
+                    <Grid item md={12} xs={12} >
                       <Field
                         as={TextField}
                         fullWidth
@@ -197,7 +226,7 @@ const NewPost: React.FC = () => {
                     color="primary"
                     type="submit"
                     variant="contained"
-                  >Add Post</Button>
+                  >Save Post</Button>
                 </Box>
               </Box>
             </Card>
@@ -205,7 +234,24 @@ const NewPost: React.FC = () => {
         }
         }
       </Formik>
+      <Card>
+        <Divider />
+        <Box style={{ width: "100%", margin: '0 auto' }} sx={{ p: 2, display: 'flex', justifyContent: "space-between", alignItems: 'center' }}>
+          <CardHeader
+            style={{ color: "red" }}
+            subheader={"Delete post"}
+            title="Danger zone"
+          ></CardHeader>
+          <CardContent>
+            <Grid container spacing={3}>
+              <Grid item md={12} xs={12} >
+                <Button variant="contained" onClick={() => setIsDelete(true)} sx={{ background: "red" }}>Delete</Button>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Box>
+      </Card>
     </>
   );
 };
-export default NewPost;
+export default EditPost;

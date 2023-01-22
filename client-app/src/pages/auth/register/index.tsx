@@ -3,6 +3,7 @@ import {
   Button,
   Container,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Select,
@@ -12,13 +13,14 @@ import {
 } from "@mui/material";
 import { Field, Formik } from "formik";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useActions } from "../../../hooks/useActions";
 import { RegisterSchema } from "../validation";
 
 const Register: React.FC = () => {
   const [role, setRole] = useState("User");
   const { RegisterUser } = useActions();
-
+  const navigate = useNavigate();
   const initialValues = {
     email: "",
     firstName: "",
@@ -37,8 +39,10 @@ const Register: React.FC = () => {
       Email: data.get("email"),
       Password: data.get("password"),
       Role: role,
+      IsBlocked: false,
     };
     RegisterUser(newUser);
+    navigate(-1);
   };
   const handleRoleChange = (event: SelectChangeEvent) => {
     setRole(event.target.value as string);
@@ -59,7 +63,7 @@ const Register: React.FC = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={RegisterSchema}
-            onSubmit={() => {}}
+            onSubmit={() => { }}
           >
             {({ errors, touched, isSubmitting, isValid, dirty }) => (
               <Box
@@ -74,88 +78,102 @@ const Register: React.FC = () => {
                 <Typography color="textSecondary" gutterBottom variant="body2">
                   Use your email to create a new account
                 </Typography>
-                <Field
-                  as={TextField}
-                  fullWidth
-                  label="First Name"
-                  margin="normal"
-                  name="firstName"
-                  variant="outlined"
-                />{" "}
-                {errors.firstName && touched.firstName ? (
-                  <div style={{ color: "red" }}>{errors.firstName}</div>
-                ) : null}
-                <Field
-                  as={TextField}
-                  fullWidth
-                  label="Last Name"
-                  margin="normal"
-                  name="lastName"
-                  variant="outlined"
-                />
-                {errors.lastName && touched.lastName ? (
-                  <div style={{ color: "red" }}>{errors.lastName}</div>
-                ) : null}
-                <Field
-                  as={TextField}
-                  fullWidth
-                  label="Email Address"
-                  margin="normal"
-                  name="email"
-                  type="email"
-                  variant="outlined"
-                />
-                {errors.email && touched.email ? (
-                  <div style={{ color: "red" }}>{errors.email}</div>
-                ) : null}
-                <Field
-                  as={TextField}
-                  fullWidth
-                  label="Password"
-                  margin="normal"
-                  name="password"
-                  type="password"
-                  variant="outlined"
-                />
-                {errors.password && touched.password ? (
-                  <div style={{ color: "red" }}>{errors.password}</div>
-                ) : null}
-                <Field
-                  as={TextField}
-                  fullWidth
-                  label="Confirm password"
-                  margin="normal"
-                  name="confirmPassword"
-                  type="password"
-                  variant="outlined"
-                />
-                {errors.confirmPassword && touched.confirmPassword ? (
-                  <div style={{ color: "red" }}>{errors.confirmPassword}</div>
-                ) : null}
-                <FormControl sx={{ width: "100%" }}>
-                  <InputLabel>Role</InputLabel>
-                  <Select
-                    value={role}
-                    defaultValue={role}
-                    label={role}
-                    onChange={handleRoleChange}
-                  >
-                    <MenuItem value={"User"}>User</MenuItem>
-                    <MenuItem value={"Administrator"}>Administrator</MenuItem>
-                  </Select>
-                </FormControl>
-                <Box sx={{ py: 2 }}>
-                  <Button
-                    disabled={!(isValid && dirty)}
-                    color="primary"
+                <Grid item md={12} xs={12}>
+                  <Field
+                    as={TextField}
                     fullWidth
-                    size="large"
-                    type="submit"
-                    variant="contained"
-                  >
-                    {isSubmitting ? "Loadind..." : "  Sign Up Now"}
-                  </Button>
-                </Box>
+                    label="First Name"
+                    margin="normal"
+                    name="firstName"
+                    variant="outlined"
+                  />{" "}
+                  {errors.firstName && touched.firstName ? (
+                    <div style={{ color: "red" }}>{errors.firstName}</div>
+                  ) : null}
+                </Grid>
+                <Grid item md={12} xs={12}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="Last Name"
+                    margin="normal"
+                    name="lastName"
+                    variant="outlined"
+                  />
+                  {errors.lastName && touched.lastName ? (
+                    <div style={{ color: "red" }}>{errors.lastName}</div>
+                  ) : null}
+                </Grid>
+                <Grid item md={12} xs={12}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="Email Address"
+                    margin="normal"
+                    name="email"
+                    type="email"
+                    variant="outlined"
+                  />
+                  {errors.email && touched.email ? (
+                    <div style={{ color: "red" }}>{errors.email}</div>
+                  ) : null}
+                </Grid>
+                <Grid item md={12} xs={12}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="Password"
+                    margin="normal"
+                    name="password"
+                    type="password"
+                    variant="outlined"
+                  />
+                  {errors.password && touched.password ? (
+                    <div style={{ color: "red" }}>{errors.password}</div>
+                  ) : null}
+                </Grid>
+                <Grid item md={12} xs={12} sx={{ mb: 3 }}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="Confirm password"
+                    margin="normal"
+                    name="confirmPassword"
+                    type="password"
+                    variant="outlined"
+                  />
+                  {errors.confirmPassword && touched.confirmPassword ? (
+                    <div style={{ color: "red" }}>{errors.confirmPassword}</div>
+                  ) : null}
+                </Grid>
+                <Grid item md={12} xs={12}>
+                  <FormControl sx={{ width: "100%" }}>
+                    <InputLabel>Role</InputLabel>
+                    <Select
+                      value={role}
+                      defaultValue={role}
+                      label={role}
+                      onChange={handleRoleChange}
+                    >
+                      <MenuItem value={"User"}>User</MenuItem>
+                      <MenuItem value={"Administrator"}>Administrator</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item md={12} xs={12} >
+                  <Box sx={{ py: 2 }}>
+                    <Button
+                      disabled={!(isValid && dirty)}
+                      color="primary"
+                      fullWidth
+                      size="large"
+                      type="submit"
+                      variant="contained"
+                    >
+                      {isSubmitting ? "Loadind..." : "  Sign Up Now"}
+                    </Button>
+                  </Box>
+                </Grid>
               </Box>
             )}
           </Formik>

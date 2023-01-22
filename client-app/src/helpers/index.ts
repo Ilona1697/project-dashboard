@@ -14,3 +14,4 @@ export const cutString = (str: string) => {
     }
     return str;
 }
+

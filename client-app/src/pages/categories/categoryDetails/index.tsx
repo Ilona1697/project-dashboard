@@ -14,6 +14,7 @@ import {
 import { Field, Formik } from "formik";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Modal from "../../../components/modal";
 import { useActions } from "../../../hooks/useActions";
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
 import { ChangeCategorySchema } from "../validation";
@@ -28,6 +29,7 @@ const CategoryDetails: React.FC = () => {
     (store) => store.CategoryReducer
   );
   const navigate = useNavigate();
+  const [isDelete, setIsDelete] = React.useState(false);
   const { UpdateCategory, DeleteCategory } = useActions();
 
   initialValues.name = selectedCategory.Name;
@@ -44,11 +46,18 @@ const CategoryDetails: React.FC = () => {
     navigate(-1);
   };
 
-  const deletePost = () => {
+  const handleDeleteCategory = () => {
     DeleteCategory(selectedCategory.id);
-    // navigate(-1);
+    navigate(-1);
   };
-
+  const modalProps = {
+    name: 'category',
+    cb: handleDeleteCategory,
+    setOpen: setIsDelete,
+  }
+  if (isDelete) {
+    return <Modal {...modalProps} />
+  }
   return (
     <>
       <Formik
@@ -111,7 +120,7 @@ const CategoryDetails: React.FC = () => {
           <CardContent>
             <Grid container spacing={3}>
               <Grid item md={12} xs={12} >
-                <Button variant="contained" onClick={deletePost} sx={{ background: "red" }}>Delete</Button>
+                <Button variant="contained" onClick={() => setIsDelete(true)} sx={{ background: "red" }}>Delete</Button>
               </Grid>
             </Grid>
           </CardContent>

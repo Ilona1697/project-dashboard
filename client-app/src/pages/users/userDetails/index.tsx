@@ -5,6 +5,8 @@ import {
   CardHeader,
   Divider,
   FormControl,
+  FormControlLabel,
+  FormGroup,
   Grid,
   InputLabel,
   MenuItem,
@@ -14,7 +16,7 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { Field, Formik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../../components/modal";
 import { useActions } from "../../../hooks/useActions";
@@ -29,12 +31,13 @@ const initialProfileValues = {
 };
 
 const UserDetails: React.FC = () => {
-  const [isBlock, setIsBlock] = React.useState(false);
   const [isDelete, setIsDelete] = React.useState(false);
   const navigate = useNavigate();
-
   const { selectedUser } = useTypedSelector((store) => store.UserReducer);
-  const { UpdateUser, DeleteUser } = useActions();
+
+
+  const { UpdateUser, DeleteUser, BlockUser } = useActions();
+
 
   initialProfileValues.name = selectedUser.Name;
   initialProfileValues.surname = selectedUser.Surname;
@@ -52,24 +55,30 @@ const UserDetails: React.FC = () => {
       surname: data.get("surname"),
       email: data.get("email"),
       role: data.get("role"),
+      isBlocked: selectedUser.IsBlocked
     };
     UpdateUser(updatedUser);
     navigate('/dashboard/users');
   };
   const handleBlockUser = () => {
-    console.log('user is blocked')
+    const updatedUser = {
+      ...selectedUser,
+      isBlocked: !selectedUser.IsBlocked
+    }
+    BlockUser(updatedUser);
     navigate(-1);
   }
   const handleDeleteUser = () => {
     DeleteUser(selectedUser);
     navigate(-1);
   }
-  const modalProps = {
-    name: 'user',
-    cb: isBlock ? handleBlockUser : handleDeleteUser,
-    setOpen: isBlock ? setIsBlock : setIsDelete,
-  }
-  if (isBlock || isDelete) {
+
+  if (isDelete) {
+    const modalProps = {
+      name: 'user',
+      cb: handleDeleteUser,
+      setOpen: setIsDelete,
+    }
     return <Modal {...modalProps} />
   }
   return (
@@ -169,14 +178,30 @@ const UserDetails: React.FC = () => {
         <Box style={{ width: "100%" }} sx={{ p: 2, display: 'flex', justifyContent: "space-between", alignItems: 'center' }}>
           <CardHeader
             style={{ color: "red" }}
-            subheader={"Delete category"}
+            subheader={"Delete user"}
             title="Danger zone"
           ></CardHeader>
           <CardContent>
             <Grid container spacing={3} style={{ display: 'flex', flexWrap: 'nowrap', alignItems: 'center' }}>
-              <Grid item md={12} xs={12} >
+              {/* <Grid item md={12} xs={12} >
                 <Button variant="contained" style={{ minWidth: '83px' }} onClick={() => { setIsBlock(true) }}>Block</Button>
+              </Grid> */}
+              <Grid item md={12} xs={12}>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Switch checked={selectedUser.IsBlocked} onChange={handleBlockUser} name="isBlocked" />
+                    }
+                    label="Block user"
+                  />
+                  {/* <Switch
+                  checked={isBlock}
+                  onChange={handleBlockUser}
+                  inputProps={{ 'aria-label': 'controlled' }}
+                /> */}
+                </FormGroup>
               </Grid>
+
               <Grid item md={12} xs={12} >
                 <Button variant="contained" style={{ minWidth: '83px' }} onClick={() => { setIsDelete(true) }} sx={{ background: "red" }}>Delete</Button>
               </Grid>

@@ -1,4 +1,5 @@
 const Category = require("../data/models/Category");
+const Post = require("../data/models/Post");
 const ServiceResponse = require("../services/ServiceResponse");
 
 exports.getAllCategories = async (req, res, next) => {
@@ -31,7 +32,6 @@ exports.getAllCategories = async (req, res, next) => {
 };
 
 exports.updateCategory = async (req, res, next) => {
-  console.log(req.body);
   const id = req.body.id;
   const Name = req.body.name;
   const updatedCategory = {
@@ -73,9 +73,12 @@ exports.deleteCategory = async (req, res, next) => {
   try {
     const category = await Category.findOne({ where: { id: categoryId } });
     if (category) {
+      await Post.update({ CategoryId: null }, { where: { CategoryId: categoryId } })
+
       await Category.destroy({
         where: { id: categoryId },
       });
+      const categories = await Category.findAll();
       res
         .status(200)
         .json(
@@ -84,7 +87,7 @@ exports.deleteCategory = async (req, res, next) => {
             null,
             null,
             true,
-            null
+            categories
           )
         );
     } else {
@@ -112,6 +115,7 @@ exports.createCategory = async (req, res, next) => {
         Name,
       });
       await newCategory.save();
+      const categories = await Category.findAll();
       res
         .status(200)
         .json(
@@ -120,7 +124,7 @@ exports.createCategory = async (req, res, next) => {
             null,
             null,
             true,
-            category
+            categories
           )
         );
     } else {

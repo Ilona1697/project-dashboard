@@ -14,7 +14,7 @@ const generateAccessToken = (id, Name, Surname, Email, Role) => {
 exports.loginUser = async (req, res, next) => {
   try {
     const user = await User.findOne({ where: { Email: req.body.email } });
-    if (user && bcrypt.compareSync(req.body.password, user.Password)) {
+    if (user && bcrypt.compareSync(req.body.password, user.Password) && !user.IsBlocked) {
       const { id, Name, Surname, Email, Role } = user;
 
       const token = generateAccessToken(id, Name, Surname, Email, Role);
@@ -51,7 +51,7 @@ exports.loginUser = async (req, res, next) => {
 };
 
 exports.register = async (req, res, next) => {
-  const { Name, Surname, Email, Password, Role } = req.body;
+  const { Name, Surname, Email, Password, Role, IsBlocked } = req.body;
   try {
     const user = await User.findOne({ where: { Email } });
     if (user) {
@@ -67,8 +67,14 @@ exports.register = async (req, res, next) => {
         Email,
         Password: bcrypt.hashSync(Password, salt),
         Role,
+        IsBlocked
       });
       await newUser.save();
+      const users = await User.findAll({
+        attributes: {
+          exclude: ["Password"],
+        },
+      });
       res
         .status(200)
         .json(
@@ -77,7 +83,7 @@ exports.register = async (req, res, next) => {
             null,
             null,
             true,
-            null
+            users
           )
         );
     }
@@ -200,6 +206,7 @@ exports.updateUser = async (req, res, next) => {
     Surname: req.body.surname,
     Email: req.body.email,
     Role: req.body.role,
+    IsBlocked: req.body.isBlocked
   };
 
   try {
@@ -211,6 +218,11 @@ exports.updateUser = async (req, res, next) => {
           new ServiceResponse("Profile not updated.", null, null, false, null)
         );
     } else {
+      const users = await User.findAll({
+        attributes: {
+          exclude: ["Password"],
+        },
+      });
       res
         .status(200)
         .json(
@@ -219,7 +231,7 @@ exports.updateUser = async (req, res, next) => {
             null,
             null,
             true,
-            null
+            users
           )
         );
     }
@@ -229,7 +241,40 @@ exports.updateUser = async (req, res, next) => {
       .json(new ServiceResponse("Server error.", null, error, false, null));
   }
 };
-
+exports.blockUser = async (req, res, next) => {
+  const userId = req.body.id;
+  try {
+    const result = await User.update({ IsBlocked: req.body.isBlocked }, { where: { id: userId } });
+    if (!result) {
+      res
+        .status(400)
+        .json(
+          new ServiceResponse("User not blocked.", null, null, false, null)
+        );
+    } else {
+      const users = await User.findAll({
+        attributes: {
+          exclude: ["Password"],
+        },
+      });
+      res
+        .status(200)
+        .json(
+          new ServiceResponse(
+            req.body.isBlocked ? "User is blocked." : "User is unblocked.",
+            null,
+            null,
+            true,
+            users
+          )
+        );
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json(new ServiceResponse("Server error.", null, error, false, null));
+  }
+};
 exports.getUserById = async (req, res, next) => {
   try {
     const user = await User.findOne({
@@ -263,7 +308,6 @@ exports.getUserById = async (req, res, next) => {
 };
 
 exports.getUserByEmail = async (req, res, next) => {
-  console.log("getUserByEmail ", req.body);
   try {
     const user = await User.findOne({
       where: { email: req.body.email },
@@ -297,15 +341,16 @@ exports.getUserByEmail = async (req, res, next) => {
 
 exports.deleteUser = async (req, res, next) => {
   const userId = req.params.id;
-  console.log("delete controller0 ===========>", userId);
-  console.log("delete controller1 ===========>", req.params.id);
-  console.log("delete controller2 ===========>", req.params);
   try {
     const user = await User.findOne({ where: { id: userId } });
-    console.log("delete controller3 ===========>", user);
     if (user) {
       await User.destroy({
         where: { id: userId },
+      });
+      const users = await User.findAll({
+        attributes: {
+          exclude: ["Password"],
+        },
       });
       res
         .status(200)
@@ -315,7 +360,7 @@ exports.deleteUser = async (req, res, next) => {
             null,
             null,
             true,
-            null
+            users
           )
         );
     } else {

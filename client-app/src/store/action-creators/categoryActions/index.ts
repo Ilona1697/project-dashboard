@@ -43,7 +43,6 @@ export const CreateCategory = (category: any) => {
     try {
       dispatch({ type: CategoryActionTypes.START_REQUEST });
       const data = await createCategory(category);
-      console.log(data);
       if (!data.IsSuccess) {
         dispatch({
           type: CategoryActionTypes.FINISH_REQUEST,
@@ -52,8 +51,8 @@ export const CreateCategory = (category: any) => {
         toast.error(data.Message);
       } else {
         dispatch({
-          type: CategoryActionTypes.CATEGORY_UPDATED,
-          payload: data.Message,
+          type: CategoryActionTypes.CATEGORY_CREATED,
+          payload: data,
         });
         toast.success(data.Message);
       }
@@ -79,7 +78,7 @@ export const DeleteCategory = (id: number) => {
       } else {
         dispatch({
           type: CategoryActionTypes.CATEGORY_DELETED,
-          payload: data.Message,
+          payload: data,
         });
         toast.success(data.Message);
       }
@@ -105,7 +104,7 @@ export const UpdateCategory = (category: any) => {
       } else {
         dispatch({
           type: CategoryActionTypes.CATEGORY_UPDATED,
-          payload: data.Message,
+          payload: data,
         });
         setSelectedCategory(category);
         toast.success(data.Message);

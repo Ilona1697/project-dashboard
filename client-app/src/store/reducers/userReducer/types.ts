@@ -20,14 +20,24 @@ export enum UserActionTypes {
   SELECT_USER = "SELECT_USER",
   USER_UPDATED = "USER_UPDATED",
   USER_DELETED = "USER_DELETED",
+  REGISTER_USER = "REGISTER_USER",
+  USER_BLOCKED = "USER_BLOCKED",
+}
+interface UserBlockedActions {
+  type: UserActionTypes.USER_BLOCKED;
+  payload: any;
+}
+interface UserRegisteredActions {
+  type: UserActionTypes.REGISTER_USER;
+  payload: any;
 }
 interface UserUpdatedActions {
   type: UserActionTypes.USER_UPDATED;
-  payload: string;
+  payload: any;
 }
 interface UserDeletedActions {
   type: UserActionTypes.USER_DELETED;
-  payload: string;
+  payload: any;
 }
 interface SelectUserActions {
   type: UserActionTypes.SELECT_USER;
@@ -72,6 +82,8 @@ interface LoginUserErrorAction {
 }
 
 export type UserActions =
+  | UserBlockedActions
+  | UserRegisteredActions
   | UserUpdatedActions
   | UserDeletedActions
   | SelectUserActions

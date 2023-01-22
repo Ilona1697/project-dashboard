@@ -14,17 +14,20 @@ const requests = {
   post: (url: string, body?: any) =>
     instance.post(url, body).then().then(responseBody),
   delete: (url: string) => instance.delete(url).then().then(responseBody),
+  put: (url: string, body?: any) =>
+    instance.put(url, body).then().then(responseBody),
 };
 
 const User = {
-  login: (user: any) => requests.post(`/login`, user),
+  login: (user: any) => requests.put(`/login`, user),
   getAllUsers: () => requests.get(`/users`),
   register: (user: any) => requests.post(`/register`, user),
-  updateProfile: (user: any) => requests.post(`/updateProfile`, user),
-  updateUser: (user: any) => requests.post(`/updateUser`, user),
+  updateProfile: (user: any) => requests.put(`/updateProfile`, user),
+  updateUser: (user: any) => requests.put(`/updateUser`, user),
   changePassword: (passwords: any) =>
-    requests.post(`/changePassword`, passwords),
+    requests.put(`/changePassword`, passwords),
   deleteUser: (id: number) => requests.delete(`/deleteUser/${id}`),
+  blockUser: (user: any) => requests.put(`/blockUser`, user),
 };
 
 export async function changePassword(passwords: any) {
@@ -66,13 +69,32 @@ export async function updateProfile(user: any) {
 export async function updateUser(user: any) {
   const data = await User.updateUser(user)
     .then((response: any) => {
-      const { Message, IsSuccess, IsAuth, Errors, Token } = response;
+      const { Message, IsSuccess, IsAuth, Errors, Token, Payload } = response;
       return {
         Message,
         IsSuccess,
         IsAuth,
         Errors,
         Token,
+        Payload
+      };
+    })
+    .catch((error: any) => {
+      return error.response.data;
+    });
+  return data;
+}
+export async function blockUser(user: any) {
+  const data = await User.blockUser(user)
+    .then((response: any) => {
+      const { Message, IsSuccess, IsAuth, Errors, Token, Payload } = response;
+      return {
+        Message,
+        IsSuccess,
+        IsAuth,
+        Errors,
+        Token,
+        Payload
       };
     })
     .catch((error: any) => {
@@ -81,17 +103,16 @@ export async function updateUser(user: any) {
   return data;
 }
 export async function deleteUser(user: any) {
-  console.log(user);
-  console.log(user.id);
   const data = await User.deleteUser(user.id)
     .then((response: any) => {
-      const { Message, IsSuccess, IsAuth, Errors, Token } = response;
+      const { Message, IsSuccess, IsAuth, Errors, Token, Payload } = response;
       return {
         Message,
         IsSuccess,
         IsAuth,
         Errors,
         Token,
+        Payload
       };
     })
     .catch((error: any) => {
@@ -118,13 +139,14 @@ export async function getAllUsers() {
 export async function register(user: any) {
   const data = await User.register(user)
     .then((response: any) => {
-      const { Message, IsSuccess, IsAuth, Errors, Token } = response;
+      const { Message, IsSuccess, IsAuth, Errors, Token, Payload } = response;
       return {
         Message,
         IsSuccess,
         IsAuth,
         Errors,
         Token,
+        Payload
       };
     })
     .catch((error: any) => {

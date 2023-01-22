@@ -38,12 +38,20 @@ const CategoryReducer = (
     case CategoryActionTypes.CATEGORY_UPDATED:
       return {
         ...state,
-        message: action.payload,
+        message: action.payload.Message,
+        categories: action.payload.Payload,
       };
     case CategoryActionTypes.CATEGORY_DELETED:
       return {
         ...state,
-        message: action.payload,
+        message: action.payload.Message,
+        categories: action.payload.Payload,
+      };
+    case CategoryActionTypes.CATEGORY_CREATED:
+      return {
+        ...state,
+        message: action.payload.Message,
+        categories: action.payload.Payload,
       };
     case CategoryActionTypes.SERVER_CATEGORY_ERROR:
       return {

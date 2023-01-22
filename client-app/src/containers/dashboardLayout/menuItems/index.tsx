@@ -33,7 +33,7 @@ export const adminMenu = (
         <ListItemText primary="Categories" />
       </ListItemButton>
     </Link>
-    <Link style={{ textDecoration: "none", color: "#5A2F8B" }} to="posts">
+    <Link style={{ textDecoration: "none", color: "#5A2F8B" }} to="allPosts">
       <ListItemButton>
         <ListItemIcon>
           <DashboardIcon />
@@ -46,29 +46,29 @@ export const adminMenu = (
 
 export const userMenu = (
   <React.Fragment>
-    <ListItemButton>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <Link style={{ textDecoration: "none" }} to="/dashboard">
+    <Link style={{ textDecoration: "none", color: "#5A2F8B" }} to="/dashboard">
+      <ListItemButton>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
         <ListItemText primary="Dashboard" />
-      </Link>
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <CategoryIcon />
-      </ListItemIcon>
-      <Link style={{ textDecoration: "none" }} to="categories">
+      </ListItemButton>
+    </Link>
+    <Link style={{ textDecoration: "none", color: "#5A2F8B" }} to="categories">
+      <ListItemButton>
+        <ListItemIcon>
+          <CategoryIcon />
+        </ListItemIcon>
         <ListItemText primary="Categories" />
-      </Link>
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <Link style={{ textDecoration: "none" }} to="posts">
+      </ListItemButton>
+    </Link>
+    <Link style={{ textDecoration: "none", color: "#5A2F8B" }} to="allPosts">
+      <ListItemButton>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
         <ListItemText primary="Posts" />
-      </Link>
-    </ListItemButton>
+      </ListItemButton>
+    </Link>
   </React.Fragment>
 );

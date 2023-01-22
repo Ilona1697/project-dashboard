@@ -23,6 +23,11 @@ const User = db.define("Users", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  IsBlocked: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  },
 });
 
 User.sync()

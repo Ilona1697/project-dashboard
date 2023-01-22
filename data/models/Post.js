@@ -22,7 +22,7 @@ const Post = db.define("Posts", {
   },
   CategoryId: {
     type: Sequelize.INTEGER,
-    allowNull: false,
+    allowNull: true,
   },
   UserId: {
     type: Sequelize.INTEGER,

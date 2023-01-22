@@ -26,6 +26,7 @@ const UserReducer = (state = initialState, action: UserActions): UserState => {
       return {
         ...state,
         message: action.payload,
+        loading: false,
       };
     case UserActionTypes.FINISH_REQUEST:
       return {
@@ -48,12 +49,20 @@ const UserReducer = (state = initialState, action: UserActions): UserState => {
     case UserActionTypes.USER_UPDATED:
       return {
         ...state,
-        message: action.payload,
+        message: action.payload.Message,
+        users: action.payload.Payload,
+      };
+    case UserActionTypes.USER_BLOCKED:
+      return {
+        ...state,
+        message: action.payload.Message,
+        users: action.payload.Payload
       };
     case UserActionTypes.USER_DELETED:
       return {
         ...state,
-        message: action.payload,
+        message: action.payload.Message,
+        users: action.payload.Payload,
       };
     case UserActionTypes.ALL_USERS_LOADED:
       return {
@@ -66,6 +75,12 @@ const UserReducer = (state = initialState, action: UserActions): UserState => {
       return {
         ...state,
         message: action.payload,
+      };
+    case UserActionTypes.REGISTER_USER:
+      return {
+        ...state,
+        message: action.payload.Message,
+        users: action.payload.Payload,
       };
     default:
       return state;

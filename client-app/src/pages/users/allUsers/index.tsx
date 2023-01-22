@@ -16,17 +16,18 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Users: React.FC = () => {
   const { GetAllUsers, SelectedUser } = useActions();
-  const { loading, users } = useTypedSelector((store) => store.UserReducer);
-  const navigate = useNavigate();
   useEffect(() => {
     GetAllUsers();
   }, []);
+  const { loading, users } = useTypedSelector((store) => store.UserReducer);
+  const navigate = useNavigate();
 
   const columns: GridColDef[] = [
     { field: "Name", headerName: "Name", width: 230 },
     { field: "Surname", headerName: "Surname", width: 230 },
     { field: "Email", headerName: "Email", width: 230 },
     { field: "Role", headerName: "Role", width: 130 },
+    { field: "IsBlocked", headerName: "Block", width: 100 },
     {
       field: "createdAt",
 

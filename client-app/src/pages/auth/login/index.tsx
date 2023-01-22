@@ -78,7 +78,7 @@ const Login: React.FC = () => {
           </Typography>
           <Formik
             initialValues={initialValues}
-            onSubmit={() => {}}
+            onSubmit={() => { }}
             validationSchema={LoginSchema}
           >
             {({ errors, touched, isSubmitting, isValid, dirty }) => (

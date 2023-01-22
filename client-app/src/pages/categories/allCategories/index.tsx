@@ -14,15 +14,14 @@ import { useActions } from "../../../hooks/useActions";
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
 
 const Categories: React.FC = () => {
-  const { GetAllCategories, SelectedCategory } = useActions();
-  const { categories, loading } = useTypedSelector(
-    (store) => store.CategoryReducer
-  );
-
   const navigate = useNavigate();
+  const { GetAllCategories, SelectedCategory } = useActions();
   useEffect(() => {
     GetAllCategories();
   }, []);
+  const { categories, loading } = useTypedSelector(
+    (store) => store.CategoryReducer
+  );
 
   const columns: GridColDef[] = [
     { field: "Name", headerName: "Category", width: 230 },
@@ -73,7 +72,6 @@ const Categories: React.FC = () => {
   if (loading) {
     return <Loader />;
   }
-
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
       <Grid container spacing={2}>

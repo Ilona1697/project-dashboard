@@ -11,6 +11,7 @@ const users = [
     Email: "admin@email.com",
     Role: "Administrator",
     Password: bcrypt.hashSync("Qwerty-1", salt),
+    IsBlocked: false,
   },
   {
     Name: "Tomas",
@@ -18,6 +19,7 @@ const users = [
     Email: "user@email.com",
     Role: "User",
     Password: bcrypt.hashSync("Qwerty-1", salt),
+    IsBlocked: false,
   },
   {
     Name: "Tomas2",
@@ -25,6 +27,7 @@ const users = [
     Email: "user2@email.com",
     Role: "User",
     Password: bcrypt.hashSync("Qwerty-1", salt),
+    IsBlocked: false,
   },
   {
     Name: "Tomas3",
@@ -32,6 +35,7 @@ const users = [
     Email: "user3@email.com",
     Role: "User",
     Password: bcrypt.hashSync("Qwerty-1", salt),
+    IsBlocked: false,
   },
   {
     Name: "Tomas4",
@@ -39,6 +43,7 @@ const users = [
     Email: "user4@email.com",
     Role: "User",
     Password: bcrypt.hashSync("Qwerty-1", salt),
+    IsBlocked: false,
   },
 ];
 

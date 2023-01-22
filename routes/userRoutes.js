@@ -11,16 +11,17 @@ const {
   getUserById,
   getUserByEmail,
   deleteUser,
+  blockUser,
 } = require("../controllers/UserController");
 
-router.post("/login", loginUser);
+router.put("/login", loginUser);
 router.get("/users", getAllUsers);
 router.post("/register", register);
-router.post("/updateProfile", updateProfile);
-router.post("/updateUser", updateUser);
-router.post("/changePassword", updatePassword);
+router.put("/updateProfile", updateProfile);
+router.put("/updateUser", updateUser);
+router.put("/changePassword", updatePassword);
 router.get("/getUserById", getUserById);
 router.get("/getUserByEmail", getUserByEmail);
 router.delete("/deleteUser/:id", deleteUser);
-
+router.put("/blockUser", blockUser);
 module.exports = router;

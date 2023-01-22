@@ -15,6 +15,7 @@ import NewCategory from "./pages/categories/newCategory";
 import GetAllPosts from "./pages/posts/allPosts";
 import PostDetails from "./pages/posts/postDetails";
 import NewPost from "./pages/posts/newPost";
+import EditPost from "./pages/posts/editPost";
 
 const App: React.FC = () => {
   const { isAuth, user } = useTypedSelector((store) => store.UserReducer);
@@ -34,9 +35,11 @@ const App: React.FC = () => {
               <Route path="categories" element={<Categories />} />
               <Route path="categories/:id" element={<CategoryDetails />} />
               <Route path="newCategory" element={<NewCategory />} />
-              <Route path="posts" element={<GetAllPosts />} />
+              <Route path="allPosts" element={<GetAllPosts />} />
+              <Route path="myPosts" element={<GetAllPosts />} />
               <Route path="postDetails" element={<PostDetails />} />
               <Route path="newPost" element={<NewPost />} />
+              <Route path="editPost" element={<EditPost />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           )}
@@ -45,9 +48,13 @@ const App: React.FC = () => {
               <Route index element={<DefaultPage />} />
               <Route path="profile" element={<Profile />} />
               <Route path="categories" element={<Categories />} />
-              <Route path="posts" element={<GetAllPosts />} />
+              <Route path="categories/:id" element={<CategoryDetails />} />
+              <Route path="newCategory" element={<NewCategory />} />
+              <Route path="allPosts" element={<GetAllPosts />} />
+              <Route path="myPosts" element={<GetAllPosts />} />
               <Route path="postDetails" element={<PostDetails />} />
               <Route path="newPost" element={<NewPost />} />
+              <Route path="editPost" element={<EditPost />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           )}

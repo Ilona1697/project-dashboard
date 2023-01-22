@@ -2,6 +2,7 @@ import { UserActionTypes, UserActions } from "../../reducers/userReducer/types";
 import { Dispatch } from "redux";
 import { toast } from "react-toastify";
 import {
+  blockUser,
   changePassword,
   deleteUser,
   getAllUsers,
@@ -47,6 +48,37 @@ export const LoginUser = (user: any) => {
   };
 };
 
+export const BlockUser = (user: any) => {
+  return async (dispatch: Dispatch<UserActions>) => {
+    try {
+      dispatch({ type: UserActionTypes.START_REQUEST });
+      const data = await blockUser(user);
+      if (!data.IsSuccess) {
+        dispatch({
+          type: UserActionTypes.FINISH_REQUEST,
+          payload: data.Message,
+        });
+        toast.error(data.Message);
+      } else {
+        dispatch({
+          type: UserActionTypes.USER_BLOCKED,
+          payload: data,
+        });
+        dispatch({
+          type: UserActionTypes.SELECT_USER,
+          payload: user
+        });
+        setSelectedUser(user);
+        toast.success(data.Message);
+      }
+    } catch (e) {
+      dispatch({
+        type: UserActionTypes.SERVER_USER_ERROR,
+        payload: "Unknown error",
+      });
+    }
+  };
+};
 export const SelectedUser = (user: any) => {
   return async (dispatch: Dispatch<UserActions>) => {
     dispatch({ type: UserActionTypes.SELECT_USER, payload: user });
@@ -122,7 +154,7 @@ export const UpdateUser = (user: any) => {
       } else {
         dispatch({
           type: UserActionTypes.USER_UPDATED,
-          payload: data.Message,
+          payload: data,
         });
         toast.success(data.Message);
       }
@@ -148,7 +180,7 @@ export const DeleteUser = (user: any) => {
       } else {
         dispatch({
           type: UserActionTypes.USER_DELETED,
-          payload: data.Message,
+          payload: data,
         });
         toast.success(data.Message);
       }
@@ -173,8 +205,8 @@ export const RegisterUser = (user: any) => {
         toast.error(data.Message);
       } else {
         dispatch({
-          type: UserActionTypes.FINISH_REQUEST,
-          payload: data.Message,
+          type: UserActionTypes.REGISTER_USER,
+          payload: data,
         });
         toast.success(data.Message);
       }

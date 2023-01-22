@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { createPost, getAllPosts, setSelectedPost } from "../../../services/post-api-service";
+import { createPost, deletePost, updatePost, getAllPosts, setSelectedPost } from "../../../services/post-api-service";
 import { PostActions, PostActionTypes } from "../../reducers/postReducer/types";
 import { toast } from "react-toastify";
 
@@ -19,6 +19,58 @@ export const GetAllPosts = () => {
           type: PostActionTypes.ALL_POSTS_LOADED,
           payload: data,
         });
+      }
+    } catch (e) {
+      dispatch({
+        type: PostActionTypes.SERVER_POST_ERROR,
+        payload: "Unknown error",
+      });
+    }
+  };
+};
+export const EditPost = (newPost: any) => {
+  return async (dispatch: Dispatch<PostActions>) => {
+    try {
+      dispatch({ type: PostActionTypes.START_REQUEST });
+      const data = await updatePost(newPost);
+      if (!data.IsSuccess) {
+        dispatch({
+          type: PostActionTypes.SERVER_POST_ERROR,
+          payload: data.Message,
+        });
+        toast.error(data.Message);
+      } else {
+        dispatch({
+          type: PostActionTypes.POST_UPDATED,
+          payload: data,
+        });
+        toast.success(data.Message);
+      }
+    } catch (e) {
+      dispatch({
+        type: PostActionTypes.SERVER_POST_ERROR,
+        payload: "Unknown error",
+      });
+    }
+  };
+};
+export const DeletePost = (newPost: any) => {
+  return async (dispatch: Dispatch<PostActions>) => {
+    try {
+      dispatch({ type: PostActionTypes.START_REQUEST });
+      const data = await deletePost(newPost);
+      if (!data.IsSuccess) {
+        dispatch({
+          type: PostActionTypes.SERVER_POST_ERROR,
+          payload: data.Message,
+        });
+        toast.error(data.Message);
+      } else {
+        dispatch({
+          type: PostActionTypes.POST_DELETED,
+          payload: data,
+        });
+        toast.success(data.Message);
       }
     } catch (e) {
       dispatch({

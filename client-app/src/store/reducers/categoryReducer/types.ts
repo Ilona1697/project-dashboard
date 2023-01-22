@@ -14,14 +14,19 @@ export enum CategoryActionTypes {
   SELECT_CATEGORY = "SELECT_CATEGORY",
   CATEGORY_UPDATED = "CATEGORY_UPDATED",
   CATEGORY_DELETED = "CATEGORY_DELETED",
+  CATEGORY_CREATED = "CATEGORY_CREATED",
+}
+interface CategoryCreatedActions {
+  type: CategoryActionTypes.CATEGORY_CREATED;
+  payload: any;
 }
 interface CategoryDeletedActions {
   type: CategoryActionTypes.CATEGORY_DELETED;
-  payload: string;
+  payload: any;
 }
 interface CategoryUpdatedActions {
   type: CategoryActionTypes.CATEGORY_UPDATED;
-  payload: string;
+  payload: any;
 }
 interface SelectedCategoryActions {
   type: CategoryActionTypes.SELECT_CATEGORY;
@@ -47,6 +52,7 @@ interface ServerErrorAction {
 }
 
 export type CategoryActions =
+  | CategoryCreatedActions
   | CategoryDeletedActions
   | CategoryUpdatedActions
   | SelectedCategoryActions
