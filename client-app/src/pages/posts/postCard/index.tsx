@@ -3,7 +3,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { cutString } from "../../../helpers";
 import { useActions } from "../../../hooks/useActions";
-
 interface PostCardI {
     post: any,
     tabName: string
@@ -25,10 +24,10 @@ const PostCard: React.FC<PostCardI> = ({ post, tabName }) => {
             <Card sx={{ width: '100%', display: "flex", flexDirection: 'column', justifyContent: 'space-between' }}>
                 <CardMedia
                     sx={{ height: 200 }}
-                    image={post.Image}
+                    image={`/static/assets/posts/${post.Image}`}
                     title={post.Title}
                 />
-                <CardContent sx={{ height: 135 }}>
+                <CardContent sx={{ height: 130 }}>
                     <Typography gutterBottom variant="h5" component="div">
                         {cutString(post.Title)}
                     </Typography>

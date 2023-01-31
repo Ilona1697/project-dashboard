@@ -4,6 +4,7 @@ const instance = axios.create({
   baseURL: "http://localhost:5000/api/Post",
   headers: {
     "Content-Type": "application/json",
+    "Access-Control-Allow-Headers": "X-Requested-With, content-type"
   },
 });
 

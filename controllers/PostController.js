@@ -1,7 +1,21 @@
 const Post = require("../data/models/Post");
-const ServiceResponse = require("../services/ServiceResponse");
+const ServiceResponse = require("../services/ServiceResponse.js");
+const path = require("path");
+const fs = require("fs");
+
+function decode_base64(base64str) {
+  const img_parts = base64str.split(';base64');
+  const img_type = img_parts[0].split('image/')[1];
+  const filename = new Date().getTime() + '.' + img_type;
+  const imgPath = path.join(__dirname, "..", "/client-app/public/static/assets/posts", filename);
+  const buffer = new Buffer.from(img_parts[1], "base64");
+
+  fs.writeFileSync(imgPath, buffer);
+  return filename;
+}
 
 exports.createPost = async (req, res, next) => {
+  const filename = decode_base64(req.body.Image);
   try {
     const post = await Post.findOne({ where: { Title: req.body.Title } });
     if (!post) {
@@ -10,7 +24,7 @@ exports.createPost = async (req, res, next) => {
         ShortDescription: req.body.ShortDescription,
         Description: req.body.Description,
         CategoryId: req.body.CategoryId,
-        Image: req.body.Image,
+        Image: filename,
         UserId: req.body.UserId,
       }).save();
       const posts = await Post.findAll();
@@ -39,6 +53,7 @@ exports.createPost = async (req, res, next) => {
         );
     }
   } catch (error) {
+    console.log('error=>>>>>>>>>>>>>>>>>>>>', error)
     res
       .status(500)
       .json(new ServiceResponse("Server error.", null, error, false, null));
@@ -135,6 +150,7 @@ exports.deletePost = async (req, res, next) => {
 };
 
 exports.updatePost = async (req, res, next) => {
+  const filename = decode_base64(req.body.Image);
   try {
     const updatedPost = {
       id: req.body.id,
@@ -142,7 +158,7 @@ exports.updatePost = async (req, res, next) => {
       ShortDescription: req.body.ShortDescription,
       Description: req.body.Description,
       CategoryId: req.body.CategoryId,
-      Image: req.body.Image,
+      Image: filename,
       UserId: req.body.UserId,
     };
     const result = await Post.update(updatedPost, {

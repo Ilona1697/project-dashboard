@@ -12,12 +12,12 @@ export const ChangePostSchema = Yup.object().shape({
   Description: Yup.string()
     .required("Description is required")
     .label("Description"),
-  // Image: Yup.mixed()
-  //   .required("Image is required")
-  //   .test('FILE_SIZE', 'Uploaded file size is too big', (value) => !value || (value && value.size <= 1024 * 1024))
-  //   .test('FILE_FORMAT', 'This file type is not supported(.jpeg, .png, .png)', (value) => !value || (value && SUPPORTED_FORMATS.includes(value?.type)))
-  //   .label("Image"),
-  Image: Yup.string().required("Image is required"),
+  Image: Yup.mixed()
+    .required("Image is required")
+    .test('FILE_SIZE', 'Uploaded file size is too big', (value) => !value || (value && value.size <= 1024 * 1024))
+    .test('FILE_FORMAT', 'This file type is not supported(.jpeg, .png, .png)', (value) => !value || (value && SUPPORTED_FORMATS.includes(value?.type)))
+    .label("Image"),
+  // Image: Yup.string().required("Image is required"),
   CategoryId: Yup.number()
     .label("Category").nullable()
 });

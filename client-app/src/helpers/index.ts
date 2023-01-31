@@ -15,3 +15,15 @@ export const cutString = (str: string) => {
     return str;
 }
 
+export const convertToBase64 = (image: any) => {
+    return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(image);
+        fileReader.onload = () => {
+            resolve(fileReader.result);
+        };
+        fileReader.onerror = (error) => {
+            reject(error);
+        };
+    });
+};

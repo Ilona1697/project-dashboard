@@ -20,7 +20,7 @@ import { useTypedSelector } from "../../../hooks/useTypedSelector";
 import { ChangePostSchema } from "../validation";
 import FormikControl from "../../../components/ui/FileInput/TextareaControl/textArea";
 import { useNavigate } from "react-router-dom";
-import { lengthString } from "../../../helpers";
+import { convertToBase64, lengthString } from "../../../helpers";
 import Modal from "../../../components/modal";
 
 const initialPostValues = {
@@ -28,13 +28,14 @@ const initialPostValues = {
   ShortDescription: "",
   Description: "",
   Image: "",
-  CategoryId: "",
+  CategoryId: null,
   UserId: ""
 };
 
 const EditPost: React.FC = () => {
   const { GetAllUsers, GetAllCategories, EditPost, DeletePost } = useActions();
   const [imageName, setImageName] = useState(null);
+  const [image, setImage] = useState(null);
   const fileRef = React.useRef<HTMLInputElement>(null);
   const [isDelete, setIsDelete] = React.useState(false);
   const navigate = useNavigate();
@@ -47,7 +48,6 @@ const EditPost: React.FC = () => {
     setImageName(selectedPost.Image);
   }, []);
 
-
   const { categories } = useTypedSelector((store) => store.CategoryReducer);
   const { user } = useTypedSelector((store) => store.UserReducer);
   initialPostValues.Title = selectedPost.Title;
@@ -56,9 +56,6 @@ const EditPost: React.FC = () => {
   initialPostValues.Image = selectedPost.Image;
   initialPostValues.CategoryId = selectedPost.CategoryId;
   initialPostValues.UserId = selectedPost.UserId;
-
-
-
 
   const editPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -70,7 +67,7 @@ const EditPost: React.FC = () => {
       Title: data.get('Title'),
       ShortDescription: data.get('ShortDescription'),
       Description: data.get('Text'),
-      Image: data.get('Image')?.toString(),
+      Image: image,
       CategoryId: data.get('CategoryId') || null,
       UserId: user.id
     };
@@ -79,6 +76,13 @@ const EditPost: React.FC = () => {
     navigate(-1);
   };
 
+  const getImage = async (e: any) => {
+    const img = e.target.files ? e.target.files[0] : null;
+    if (img !== null) {
+      const convertedImage: any = await convertToBase64(img);
+      setImage(convertedImage);
+    }
+  };
   const categoryItems = categories.map((category: any) => {
     return <MenuItem key={category.id} value={category.id}>{category.Name}</MenuItem>;
   });
@@ -160,19 +164,7 @@ const EditPost: React.FC = () => {
                         <div style={{ color: "red" }}>{errors.Description}</div>
                       ) : null}
                     </Grid>
-                    <Grid item md={12} xs={12} >
-                      <Field
-                        as={TextField}
-                        fullWidth
-                        label={"Image"}
-                        name="Image"
-                        variant="outlined"
-                      />
-                      {errors.Image && touched.Image ? (
-                        <div style={{ color: "red" }}>{errors.Image}</div>
-                      ) : null}
-                    </Grid>
-                    {/* <Grid item md={12} xs={12}>
+                    <Grid item md={12} xs={12}>
                       <input
                         hidden
                         ref={fileRef}
@@ -181,6 +173,7 @@ const EditPost: React.FC = () => {
                         onChange={(event: any) => {
                           setFieldValue('Image', event.target.files[0])
                           setImageName(event.target.files[0].name);
+                          getImage(event)
                         }}
                         accept="images/*, .png, .jpg, .jpeg"
                       />
@@ -189,7 +182,9 @@ const EditPost: React.FC = () => {
                           onClick={() => {
                             fileRef.current?.click();
                           }}
+                          name="Image"
                           onBlur={handleBlur('Image')}
+
                         >Select Image</Button>
 
                         {imageName ? (
@@ -200,7 +195,7 @@ const EditPost: React.FC = () => {
                       {errors.Image && touched.Image ? (
                         <div style={{ color: "red" }}>{errors.Image}</div>
                       ) : null}
-                    </Grid> */}
+                    </Grid>
                     <Grid item md={12} xs={12}>
                       <FormControl sx={{ width: "100%" }}>
                         <InputLabel>Category</InputLabel>

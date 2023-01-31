@@ -83,7 +83,7 @@ const PostDetails: React.FC = () => {
             <Typography variant="subtitle1" style={{ fontSize: '17px', display: "flex", alignItems: 'center', color: "#707070" }} sx={{ mb: 3 }}>
               <AccessTimeIcon style={{ marginRight: "5px", fontSize: "20px" }} />{date}
             </Typography>
-            {<img style={{ display: 'block', width: '100%', marginBottom: "40px" }} src={post.image} alt='post.imageText' />}
+            {<img style={{ display: 'block', width: '100%', marginBottom: "40px" }} src={`/static/assets/posts/${post.image}`} alt='post.imageText' />}
             <Typography variant="h5" color="#000" paragraph dangerouslySetInnerHTML={{ __html: post.description }} style={{ width: '85%', fontSize: '22px', color: "#4a4a4a" }}>
             </Typography>
           </Box>

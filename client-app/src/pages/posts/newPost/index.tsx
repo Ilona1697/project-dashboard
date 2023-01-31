@@ -20,7 +20,7 @@ import { useTypedSelector } from "../../../hooks/useTypedSelector";
 import { ChangePostSchema } from "../validation";
 import FormikControl from "../../../components/ui/FileInput/TextareaControl/textArea";
 import { useNavigate } from "react-router-dom";
-import { lengthString } from "../../../helpers";
+import { convertToBase64, lengthString } from "../../../helpers";
 
 const initialPostValues = {
   Title: "",
@@ -34,6 +34,7 @@ const initialPostValues = {
 const NewPost: React.FC = () => {
   const { CreatePost, GetAllCategories, GetAllPosts } = useActions();
   const [imageName, setImageName] = useState(null);
+  const [image, setImage] = useState(null);
   const navigate = useNavigate();
 
   const fileRef = React.useRef<HTMLInputElement>(null);
@@ -48,12 +49,11 @@ const NewPost: React.FC = () => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
 
-
     const newPost = {
       Title: data.get('Title'),
       ShortDescription: data.get('ShortDescription'),
       Description: data.get('Text'),
-      Image: data.get('Image')?.toString(),
+      Image: image,
       CategoryId: data.get('CategoryId') || null,
       UserId: user.id
     };
@@ -61,10 +61,17 @@ const NewPost: React.FC = () => {
 
     navigate(-1);
   };
-  const categoryItems = categories.map((category: any) => {
-    return <MenuItem key={category.id} value={category.id || ''}>{category.Name}</MenuItem>;
-  });
 
+  const categoryItems = categories.map((category: any) => {
+    return <MenuItem key={category.id} value={category.id}>{category.Name}</MenuItem>;
+  });
+  const getImage = async (e: any) => {
+    const img = e.target.files ? e.target.files[0] : null;
+    if (img !== null) {
+      const convertedImage: any = await convertToBase64(img);
+      setImage(convertedImage);
+    }
+  };
   return (
     <>
       <Formik
@@ -96,6 +103,8 @@ const NewPost: React.FC = () => {
                         label={"Title"}
                         name="Title"
                         variant="outlined"
+                        onChange={handleChange}
+                        value={values.Title}
                       />
                       {errors.Title && touched.Title ? (
                         <div style={{ color: "red" }}>{errors.Title}</div>
@@ -108,6 +117,8 @@ const NewPost: React.FC = () => {
                         label={"Short description"}
                         name="ShortDescription"
                         variant="outlined"
+                        onChange={handleChange}
+                        value={values.ShortDescription}
                       />
                       {errors.ShortDescription && touched.ShortDescription ? (
                         <div style={{ color: "red" }}>{errors.ShortDescription}</div>
@@ -118,32 +129,19 @@ const NewPost: React.FC = () => {
                         hidden
                         name="Text"
                         value={values.Description}
-                        onChange={() => { }}
+                        onChange={handleChange}
                       />
                       <Field
                         as={FormikControl}
                         label={"Description"}
                         name="Description"
                         control="tiny-mce"
-
                       />
                       {errors.Description && touched.Description ? (
                         <div style={{ color: "red" }}>{errors.Description}</div>
                       ) : null}
                     </Grid>
                     <Grid item md={12} xs={12}>
-                      <Field
-                        as={TextField}
-                        fullWidth
-                        label={"Image"}
-                        name="Image"
-                        variant="outlined"
-                      />
-                      {errors.Image && touched.Image ? (
-                        <div style={{ color: "red" }}>{errors.Image}</div>
-                      ) : null}
-                    </Grid>
-                    {/* <Grid item md={12} xs={12}>
                       <input
                         hidden
                         ref={fileRef}
@@ -152,6 +150,7 @@ const NewPost: React.FC = () => {
                         onChange={(event: any) => {
                           setFieldValue('Image', event.target.files[0])
                           setImageName(event.target.files[0].name);
+                          getImage(event)
                         }}
                         accept="images/*, .png, .jpg, .jpeg"
                       />
@@ -160,7 +159,9 @@ const NewPost: React.FC = () => {
                           onClick={() => {
                             fileRef.current?.click();
                           }}
+                          name="Image"
                           onBlur={handleBlur('Image')}
+
                         >Select Image</Button>
 
                         {imageName ? (
@@ -171,7 +172,7 @@ const NewPost: React.FC = () => {
                       {errors.Image && touched.Image ? (
                         <div style={{ color: "red" }}>{errors.Image}</div>
                       ) : null}
-                    </Grid> */}
+                    </Grid>
                     <Grid item md={12} xs={12}>
                       <FormControl sx={{ width: "100%" }}>
                         <InputLabel>Category</InputLabel>
@@ -181,10 +182,11 @@ const NewPost: React.FC = () => {
                           label="Category"
                           name="CategoryId"
                           variant="outlined"
+                          onChange={handleChange}
+                          value={values.CategoryId || ""}
                         >
                           <MenuItem value='null'>Without category</MenuItem>;
                           {categoryItems}
-
                         </Field>
                       </FormControl>
                     </Grid>
